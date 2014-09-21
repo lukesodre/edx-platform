@@ -21,6 +21,12 @@ urlpatterns = ('',  # nopep8
 
     url(r'^admin_dashboard$', 'dashboard.views.dashboard'),
 
+    #this Urls are used for the #BDU website
+    url(r'^complete_registration$', 'student.views.complete_registration', name="complete_registration"),
+    url(r'^update_account$', 'student.views.update_account', name='update_account'),
+    url(r'^report$', 'student.views.report', name='report'),
+    #-------------------------------------------------------------------------------------------
+    
     url(r'^change_email$', 'student.views.change_email_request', name="change_email"),
     url(r'^email_confirm/(?P<key>[^/]*)$', 'student.views.confirm_email_change'),
     url(r'^change_name$', 'student.views.change_name_request', name="change_name"),
