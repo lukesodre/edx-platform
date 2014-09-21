@@ -86,6 +86,8 @@ This type of discussion topic is subject to the release date of the section
 that contains it. Students cannot contribute to these discussion topics until
 that date.
 
+.. _Create CourseWide Discussion Topics:
+
 =====================================
 Create Course-Wide Discussion Topics
 =====================================

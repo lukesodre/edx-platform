@@ -75,10 +75,12 @@ C
 
 .. _Cohort:
  
-.. **Cohort**
+**Cohort**
 
-..  A group of students that participate in the class together. A cohort can have forum discussions apart from the rest of the students.
+  A group of students that participate in a class together. The members of a
+  cohort can communicate and share experiences in private discussions.
 
+  See :ref:`Cohorts Overview`. 
 
 .. _Component_g:
  
