@@ -449,6 +449,104 @@ def is_course_blocked(request, redeemed_registration_codes, course_key):
 
     return blocked
 
+#Here begins the code for #BDU webiste
+@login_required
+@ensure_csrf_cookie
+def complete_registration(request):
+      
+    user = request.user
+    context = {
+        'user': user,
+        'course_id': request.GET.get('course_id'),
+        'email': user.email,
+        'enrollment_action': request.GET.get('enrollment_action'),
+        'name': '',
+        'running_pipeline': None,
+        'platform_name': microsite.get_value(
+            'platform_name',
+            settings.PLATFORM_NAME
+        ),
+        'selected_provider': '',
+        'username': 'bamama',
+        'gender': 'm'
+    }
+
+    # We save this so, later on, we can determine what course motivated a user's signup
+    # if they actually complete the registration process
+    request.session['registration_course_id'] = context['course_id']
+
+    #if extra_context is not None:
+    #    context.update(extra_context)
+
+    if context.get("extauth_domain", '').startswith(external_auth.views.SHIBBOLETH_DOMAIN_PREFIX):
+        return render_to_response('register-shib.html', context)
+
+    # If third-party auth is enabled, prepopulate the form with data from the
+    # selected provider.
+    if microsite.get_value('ENABLE_THIRD_PARTY_AUTH', settings.FEATURES.get('ENABLE_THIRD_PARTY_AUTH')) and pipeline.running(request):
+        running_pipeline = pipeline.get(request)
+        current_provider = provider.Registry.get_by_backend_name(running_pipeline.get('backend'))
+        overrides = current_provider.get_register_form_data(running_pipeline.get('kwargs'))
+        overrides['running_pipeline'] = running_pipeline
+        overrides['selected_provider'] = current_provider.NAME
+        context.update(overrides)
+   
+ 
+    return render_to_response('completeRegistration.html', context)
+
+@login_required
+@ensure_csrf_cookie
+@require_POST
+def update_account(request):
+    # return HttpResponse('bananas') 
+    
+    # """ Log a request for a new name. """
+    # if not request.user.is_authenticated():
+    #     raise Http404
+    
+    user = request.user
+    #info.new_name = request.POST['new_name'].strip()
+    variables = request.POST
+    
+    UserProfile.objects.filter(user = user).update(gender=variables['gender'])
+    UserProfile.objects.filter(user = user).update(country=variables['country'])
+    if variables['year_of_birth']:
+        UserProfile.objects.filter(user = user).update(year_of_birth=variables['year_of_birth'])
+    
+    if variables['mailing_address']=='None':
+        UserProfile.objects.filter(user = user).update(mailing_address='')
+    else:
+        UserProfile.objects.filter(user = user).update(mailing_address=variables['mailing_address'])
+    
+    if variables['city']=='None':
+        UserProfile.objects.filter(user = user).update(city='')
+    else:
+        UserProfile.objects.filter(user = user).update(city=variables['city'])
+    
+    if variables['goals']=='None':
+        UserProfile.objects.filter(user = user).update(goals='')
+    else:
+        UserProfile.objects.filter(user = user).update(goals=variables['goals'])
+   
+    UserProfile.objects.filter(user = user).update(level_of_education=variables['level_of_education'])
+
+    response = JsonResponse({
+        'success': True,
+        'redirect_url': "http://108.168.178.81/dashboard",
+    })
+    return response 
+
+def report(request):
+    students = UserProfile.objects.all().count()    
+    courses = modulestore().get_courses() 
+    
+    context = {'courses': courses,
+               'counter': students,
+              }
+    g =  grades.grade(request.user,request,courses[1])
+    return render_to_response('report.html', context)   
+
+#--------------------------------------------------------------------------
 
 @login_required
 @ensure_csrf_cookie
