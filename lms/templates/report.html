@@ -1,0 +1,31 @@
+<%! 
+from courseware.courses import get_course, get_course_about_section
+from student.models import CourseEnrollment 
+from xmodule.modulestore.django import modulestore
+from certificates.models import GeneratedCertificate
+%>
+
+<h2> Number of Students </h2>
+<h3> ${counter} </h3>
+<h2> Students enrolled per course </h2>
+<table border='1' style="width:50%; border-collapse: collapse;">
+    <th>Course Name</th>
+    <th>Course Id</th>
+    <th>Students Enrolled</th>
+    <th>Students Passing</th>
+    <th>Ratio Passing/Enrolled</th>
+    %for course in courses:
+    <%
+    passing = GeneratedCertificate.objects.filter(status='downloadable',course_id=course.id).count() * 1.0
+    enrolled = CourseEnrollment.num_enrolled_in(course.id) * 1.0
+    ratio = (passing/enrolled) * 100.0
+    %>
+        <tr>
+            <td>${get_course_about_section(get_course(course.id), 'title')}</td>
+            <td>${course.id} </td>
+            <td>${CourseEnrollment.num_enrolled_in(course.id)}</td> 
+            <td>${GeneratedCertificate.objects.filter(status='downloadable',course_id=course.id).count()}</td>
+            <td>${ratio}%</td>
+       </tr>
+    %endfor
+</table>
