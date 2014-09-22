@@ -543,7 +543,6 @@ def report(request):
     context = {'courses': courses,
                'counter': students,
               }
-    g =  grades.grade(request.user,request,courses[1])
     return render_to_response('report.html', context)   
 
 #--------------------------------------------------------------------------
