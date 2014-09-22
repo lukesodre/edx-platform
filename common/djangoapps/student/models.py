@@ -275,6 +275,10 @@ class UserProfile(models.Model):
         meta['session_id'] = session_id
         self.set_meta(meta)
         self.save()
+        
+    # #BDU return number of users
+    def get_uses(self)
+        return self.objects.all().count()
 
 
 class UserSignupSource(models.Model):
