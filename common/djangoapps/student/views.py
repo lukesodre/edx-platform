@@ -545,13 +545,15 @@ def report(request):
               }
     return render_to_response('report.html', context)   
 
-#--------------------------------------------------------------------------
+
 
 @login_required
 @ensure_csrf_cookie
 def dashboard(request):
     user = request.user
 
+    #profileLog = UserProfile(user = user)
+    #raise Exception(user.profile.mailing_address)
     # for microsites, we want to filter and only show enrollments for courses within
     # the microsites 'ORG'
     course_org_filter = microsite.get_value('course_org_filter')
@@ -647,6 +649,10 @@ def dashboard(request):
     else:
         # otherwise, use the default language
         current_language = settings.LANGUAGE_DICT[settings.LANGUAGE_CODE]
+    #if not  user.profile.gender:
+    #    message = "por favor complete cadastro"
+    if not  user.profile.mailing_address or not user.profile.country or not user.profile.level_of_education or not user.profile.gender or not user.profile.goals or not user.profile.city or not user.profile.year_of_birth:
+        message += "<h2>Aviso</h2><br> Algumas informacoes suas estao faltando, por favor clique no link para completar o seu registro. <br><br> <h3><a href='http://108.168.178.81/complete_registration'>Completar registro</a></h3>"
 
     context = {
         'course_enrollment_pairs': course_enrollment_pairs,
@@ -683,6 +689,8 @@ def dashboard(request):
 
     return render_to_response('dashboard.html', context)
 
+
+#--------------------------------------------------------------------------
 
 def try_change_enrollment(request):
     """
