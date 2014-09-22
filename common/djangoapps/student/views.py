@@ -545,7 +545,9 @@ def report(request):
               }
     return render_to_response('report.html', context)   
 
-
+#return the number of users in the database
+def return_users_count:
+    return User.objects.all().count()
 
 @login_required
 @ensure_csrf_cookie
