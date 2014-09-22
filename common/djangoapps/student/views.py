@@ -652,7 +652,7 @@ def dashboard(request):
     #if not  user.profile.gender:
     #    message = "por favor complete cadastro"
     if not  user.profile.mailing_address or not user.profile.country or not user.profile.level_of_education or not user.profile.gender or not user.profile.goals or not user.profile.city or not user.profile.year_of_birth:
-        message += "<h2>Aviso</h2><br> Algumas informacoes suas estao faltando, por favor clique no link para completar o seu registro. <br><br> <h3><a href='http://108.168.178.81/complete_registration'>Completar registro</a></h3>"
+        message += "<h2>Aviso</h2><br> Algumas informacoes suas estao faltando, por favor clique no link para completar o seu registro. <br><br> <h3><a href='http://br.bigdatauniversity.com/complete_registration'>Completar registro</a></h3>"
 
     context = {
         'course_enrollment_pairs': course_enrollment_pairs,
