@@ -547,7 +547,10 @@ def report(request):
 
 #return the number of users in the database
 def return_users_count:
-    return User.objects.all().count()
+    
+    User.objects.all().count()
+    
+    return response
 
 @login_required
 @ensure_csrf_cookie
