@@ -532,7 +532,7 @@ def update_account(request):
 
     response = JsonResponse({
         'success': True,
-        'redirect_url': "http://108.168.178.81/dashboard",
+        'redirect_url': redirect(reverse('dashboard')),
     })
     return response 
 
